@@ -11,6 +11,7 @@ import com.group4.HaUISocialMedia_server.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -257,16 +258,145 @@ public class UserServiceImpl implements UserService {
         return result.toString();
     }
 
+
+    //FUNCTION NEWLY WRITTEN FOR ADMIN SWING
+    @Override
+    public UserDto createUser(UserDto userDto) {
+        if (userDto == null) return null;
+
+        User user = new User();
+
+        if (userDto.getUsername() != null)
+            user.setUsername(userDto.getUsername());
+        if (userDto.getCode() != null)
+            user.setCode(userDto.getCode());
+        if (userDto.getFirstName() != null)
+            user.setFirstName(userDto.getFirstName());
+        if (userDto.getLastName() != null)
+            user.setLastName(userDto.getLastName());
+        if (userDto.getEmail() != null)
+            user.setEmail(userDto.getEmail());
+        if (userDto.getAddress() != null)
+            user.setAddress(userDto.getAddress());
+
+        user.setGender(userDto.isGender());
+
+        if (userDto.getBirthDate() != null)
+            user.setBirthDate(userDto.getBirthDate());
+
+        if (userDto.getRole() != null)
+            user.setRole(userDto.getRole());
+        if (userDto.getPhoneNumber() != null)
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        if (userDto.getDisable() != null)
+            user.setDisable(userDto.getDisable());
+
+        // Save the user entity to the repository
+        user = userRepository.save(user);
+
+        // Convert the saved user entity back to UserDto
+        return new UserDto(user);
+    }
+
+    @Override
+    @Modifying
+    @Transactional
+    public UserDto updateUserV2(UserDto userDto) {
+        if (userDto == null || userDto.getId() == null) {
+            return null;
+        }
+
+        // Find the existing user entity by ID
+        User existingUser = userRepository.findById(userDto.getId()).orElse(null);
+        if (existingUser == null) {
+            return null;
+        }
+
+        // Update the fields of the existing user with the values from the DTO
+        if (userDto.getUsername() != null) {
+            existingUser.setUsername(userDto.getUsername());
+        }
+        if (userDto.getCode() != null) {
+            existingUser.setCode(userDto.getCode());
+        }
+        if (userDto.getFirstName() != null) {
+            existingUser.setFirstName(userDto.getFirstName());
+        }
+        if (userDto.getLastName() != null) {
+            existingUser.setLastName(userDto.getLastName());
+        }
+        if (userDto.getEmail() != null) {
+            existingUser.setEmail(userDto.getEmail());
+        }
+
+        if (userDto.getAddress() != null) {
+            existingUser.setAddress(userDto.getAddress());
+        }
+        existingUser.setGender(userDto.isGender());
+        if (userDto.getBirthDate() != null) {
+            existingUser.setBirthDate(userDto.getBirthDate());
+        }
+
+        if (userDto.getRole() != null) {
+            existingUser.setRole(userDto.getRole());
+        }
+        if (userDto.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getDisable() != null) {
+            existingUser.setDisable(userDto.getDisable());
+        }
+
+        // Save the updated user entity
+        User updatedUser = userRepository.save(existingUser);
+
+        // Convert the updated user entity back to UserDto and return
+        return new UserDto(updatedUser);
+    }
+
+    @Override
+    @Modifying
+    @Transactional
+    public UserDto deleteUserByVoided(UserDto userDto) {
+        if (userDto == null || userDto.getId() == null) {
+            return null;
+        }
+
+        // Find the existing user entity by ID
+        User existingUser = userRepository.findById(userDto.getId()).orElse(null);
+        if (existingUser == null) {
+            return null;
+        }
+
+        existingUser.setVoided(true);
+
+        // Save the updated user entity
+        User updatedUser = userRepository.save(existingUser);
+
+        // Convert the updated user entity back to UserDto and return
+        return new UserDto(updatedUser);
+    }
+
+    @Override
+    public List<UserDto> getUsersNotVoided() {
+        User currentUser = this.getCurrentLoginUserEntity();
+        if (currentUser == null) return null;
+
+        List<UserDto> res = new ArrayList<>();
+        List<User> allUsers = userRepository.findAll();
+        for (User user : allUsers) {
+            if (!user.isVoided()) {
+                UserDto person = new UserDto(user);
+
+                res.add(person);
+            }
+        }
+
+        return res;
+    }
+
     @Override
     public UserDto updateAccountStatus(UserDto userDto) {
-        User onUpdateUser = userRepository.findById(userDto.getId()).orElse(null);
-        if (onUpdateUser == null || onUpdateUser.getId() == null) return null;
-
-        boolean status = userDto.getDisable();
-        onUpdateUser.setDisable(status);
-
-        User updatedUser = userRepository.save(onUpdateUser);
-
-        return new UserDto(updatedUser);
+        return null;
     }
 }

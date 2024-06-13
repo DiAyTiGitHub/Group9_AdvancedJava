@@ -35,7 +35,21 @@ public interface UserService {
 
     public List<UserDto> pagingByKeyword(SearchObject searchObject);
 
+
+
+
+
+    //FUNCTION NEWLY WRITTEN FOR ADMIN SWING
+    public UserDto createUser(UserDto userDto);
+
+    public UserDto updateUserV2(UserDto userDto);
+
+    public UserDto deleteUserByVoided(UserDto userDto);
+
+    public List<UserDto> getUsersNotVoided();
+
     public UserDto updateAccountStatus(UserDto userDto);
+
 
 
 

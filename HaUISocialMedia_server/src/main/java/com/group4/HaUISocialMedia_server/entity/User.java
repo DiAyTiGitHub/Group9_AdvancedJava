@@ -62,6 +62,8 @@ public class User implements Serializable {
 
     private boolean disable;
 
+    private boolean voided;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Message> messages;
 
