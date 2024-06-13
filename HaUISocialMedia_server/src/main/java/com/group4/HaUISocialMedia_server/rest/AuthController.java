@@ -38,7 +38,7 @@ public class AuthController {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 
         if (jwtAuthResponse.getLoggedInUser().getRole().equals("ADMIN")) {
-            AdminLogin adminView = new AdminLogin();
+            AdminLogin adminView = new AdminLogin(userService);
             adminView.setVisible(true);
             adminView.setLocationRelativeTo(null);
         }

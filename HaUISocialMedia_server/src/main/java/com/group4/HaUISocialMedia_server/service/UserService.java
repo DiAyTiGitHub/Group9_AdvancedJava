@@ -35,4 +35,6 @@ public interface UserService {
 
     public List<UserDto> pagingByKeyword(SearchObject searchObject);
 
+    public UserDto updateAccountStatus(UserDto userDto);
+
 }

@@ -285,4 +285,17 @@ public class UserServiceImpl implements UserService {
 
         return result.toString();
     }
+
+    @Override
+    public UserDto updateAccountStatus(UserDto userDto) {
+        User onUpdateUser = userRepository.findById(userDto.getId()).orElse(null);
+        if (onUpdateUser == null || onUpdateUser.getId() == null) return null;
+
+        boolean status = userDto.getDisable();
+        onUpdateUser.setDisable(status);
+
+        User updatedUser = userRepository.save(onUpdateUser);
+
+        return new UserDto(updatedUser);
+    }
 }
