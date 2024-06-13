@@ -26,13 +26,13 @@ const NavBar = () => {
         style={{ flexWrap: "wrap", backgroundColor: "white" }}
       >
         <div className="flex gap-3">
-          <Link to="/" className="flex items-center gap-5">
+          <Link to="/messenger-v2" className="flex items-center gap-5">
             <div className="profile-image">
               <img src={hauiLogo} />
             </div>
           </Link>
 
-          <div className="flex gap-3 bg-light rounded-full px-4 py-2 justify-between items-center">
+          {/* <div className="flex gap-3 bg-light rounded-full px-4 py-2 justify-between items-center">
             <input
               type="text"
               placeholder="Tìm kiếm..."
@@ -46,11 +46,11 @@ const NavBar = () => {
             >
               <Search />
             </button>
-          </div>
+          </div> */}
         </div>
 
-        <div className="flex gap-10">
-          {navbarLink.map((link) => (
+        {/* <div className="flex gap-10">
+          {navbarLink?.map((link) => (
             <Link
               key={link.route}
               to={link.route}
@@ -61,11 +61,14 @@ const NavBar = () => {
               <Icon name={link.icon as IconName} size={28} />
             </Link>
           ))}
-        </div>
+        </div> */}
 
         <div className="flex items-center gap-10">
-          <Link to="/leaderboard" className="bg-light p-3 rounded-full">
-            <GraduationCap className="hover:text-primary" />
+          <Link to="/friends" className="bg-light p-3 rounded-full">
+            {/* <GraduationCap className="hover:text-primary" /> */}
+
+            <Icon name={"Users" as IconName} size={28} />
+
           </Link>
 
           <Link to="/messenger-v2" className="bg-light p-3 rounded-full">

@@ -31,7 +31,7 @@ function Layout() {
   return (
     <>
       <NavBar />
-      <main className="relative pr-5">
+      <main className="relative">
         <Outlet />
       </main>
     </>

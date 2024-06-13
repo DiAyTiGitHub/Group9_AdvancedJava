@@ -6,7 +6,7 @@ const SidebarFriendPage = () => {
   return (
     <div className="sticky h-screen top-[1rem] ">
       <div className="h-full  bg-white  rounded-r-md shadow-sm">
-        {sidebarFriendPage.map((link) => (
+        {sidebarFriendPage?.map((link) => (
           <Link
             key={link.route}
             to={link.route}

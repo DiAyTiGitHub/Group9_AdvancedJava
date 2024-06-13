@@ -44,13 +44,13 @@ const SuggestFriendPage = () => {
       <SidebarFriendPage />
       <div className="flex flex-col gap-10 mx-5">
         <div className="flex-1 p-5">
-          <div className="mb-5">
-            <h3 className="h3-bold mb-5">Danh sách gợi ý</h3>
-            <div className="flex items-center bg-white max-w-max rounded-xl">
+          <div className="mb-5 flex items-center justify-between">
+            <h3 className="h3-bold">Danh sách gợi ý</h3>
+            <div className="flex items-center  max-w-max rounded-xl">
               <Input
                 type="text"
                 placeholder="Tìm bạn bè..."
-                className="border-blue-500 rounded-none rounded-l-md"
+                className="border-blue-500 rounded-none rounded-l-md bg-white"
                 onChange={(e) => setSearch(e.target.value)}
               />
               <Button

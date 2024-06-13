@@ -12,11 +12,14 @@ const ListSuggestFriend = ({ suggestFriends }: Props) => {
 
   const { addFriend } = relationshipStore;
   return (
-    <div className=" grid grid-cols-4 gap-5 my-10">
-      {!suggestFriends || suggestFriends.length === 0 ? (
+    <>
+      {
+        (!suggestFriends || suggestFriends.length === 0) &&
         <NoData title="Chưa có bạn bè gợi ý" style="h-[100px] w-[100px]" />
-      ) : (
-        suggestFriends.map((friend: IUser) => (
+      }
+
+      <div className=" grid grid-cols-4 gap-5 my-10">
+        {suggestFriends?.map((friend: IUser) => (
           <div
             key={friend?.id}
             className="cursor-pointer flex  gap-5 pb-5 bg-blue-2 rounded-xl w-full"
@@ -60,10 +63,12 @@ const ListSuggestFriend = ({ suggestFriends }: Props) => {
               </div>
             </div>
           </div>
-        ))
-      )}
-    </div>
-  );
+        ))}
+
+
+      </div>
+    </>
+  )
 };
 
 export default ListSuggestFriend;

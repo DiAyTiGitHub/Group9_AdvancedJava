@@ -11,9 +11,11 @@ function MainProfile(props: any) {
   const { isLoadingUser, userProfile, isCurrentUser } = props;
 
   return (
-    <Grid container spacing={2} className="pt-4">
-      <Grid item xs={12} md={5} lg={4}>
-        <div className="infoCard mt-4">
+    <Grid container spacing={2} className="py-4">
+      <Grid item xs={12}
+      //  md={5} lg={4}
+      >
+        <div className="infoCard">
           {isLoadingUser ? (
             <TableSkeleton
               styles="chats h-max-content w-full overflow-y-auto"
@@ -79,12 +81,12 @@ function MainProfile(props: any) {
           )}
         </div>
       </Grid>
-      <Grid item xs={12} md={7} lg={8}>
+      {/* <Grid item xs={12} md={7} lg={8}>
         <div className={`flex-1 flex flex-col`}>
           {isCurrentUser && <SessionCreatePost />}
           <PostOfUser />
         </div>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }

@@ -43,8 +43,8 @@ const FriendPage = () => {
       <SidebarFriendPage />
       <div className="flex flex-col gap-10 mx-5">
         <div className="flex-1 p-5">
-          <div className="mb-5">
-            <h3 className="h3-bold mb-5">Danh sách bạn bè</h3>
+          <div className="mb-5 flex justify-between items-center">
+            <h3 className="h3-bold">Danh sách bạn bè</h3>
             <div className="flex items-center bg-white max-w-max  rounded-xl">
               <Input
                 type="text"

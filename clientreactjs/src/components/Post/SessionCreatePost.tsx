@@ -9,7 +9,7 @@ const SessionCreatePost = () => {
   const currentUser = LocalStorage.getLoggedInUser();
 
   return (
-    <div className="w-full bg-white py-3 px-2 rounded-lg my-4 ">
+    <div className="w-full bg-white py-3 px-2 rounded-lg ">
       <div className="flex items-center gap-5 ">
         <Link to="/profile/1" className="flex items-center">
           <div className=" ">

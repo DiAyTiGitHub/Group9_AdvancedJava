@@ -38,7 +38,7 @@ const PostOfUser = () => {
       ) : (
         <>
           {!posts || posts.length === 0 ? (
-            <div className="bg-white w-full rounded-md h-full py-10 mt-4">
+            <div className="bg-white w-full rounded-md h-full py-10">
               <NoData title="Bạn chưa có bài viết nào, hãy kết nối với bạn bè để cùng chia sẻ những khoản khắc !!!" />
             </div>
           ) : (

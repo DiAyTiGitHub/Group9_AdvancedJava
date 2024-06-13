@@ -10,9 +10,13 @@ export function sendMessage(message: any) {
 }
 
 export function findTop20PreviousByMileStone(mileStoneId: any) {
-  const url = API_PATH + '/pre20Message';
-  const searchObject = {
-    mileStoneId: mileStoneId,
-  };
-  return _axios.post(url, searchObject);
+  if (mileStoneId) {
+    const url = API_PATH + '/pre20Message';
+    const searchObject = {
+      mileStoneId: mileStoneId,
+    };
+    return _axios.post(url, searchObject);
+  }
+
+  return { data: [] };
 }

@@ -113,7 +113,7 @@ class ChatStore {
     this.canLoadMore = true;
   };
 
-   onReceiveRoomMessage = (payload: any) => {
+  onReceiveRoomMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
     const roomId = payloadData?.room?.id;
     if (!roomId) {
@@ -372,16 +372,18 @@ class ChatStore {
       this.isLoadingMore = true;
 
       const latestMessage = this.getLatestAvailableMessage();
+      if (latestMessage && latestMessage?.id) {
+        const { data } = await findTop20PreviousByMileStone(latestMessage?.id);
+        // console.log(data)
+        if (data && data?.length < 20) this.canLoadMore = false;
 
-      const { data } = await findTop20PreviousByMileStone(latestMessage?.id);
-      if (data?.length < 20) this.canLoadMore = false;
-
-      this.chosenRoom.messages = [...data, ...this.chosenRoom.messages];
+        this.chosenRoom.messages = [...data, ...this.chosenRoom.messages];
+      }
 
       this.isLoadingMore = false;
     } catch (error: any) {
       toast.error("Có lỗi xảy ra khi tải tin nhắn cũ");
-      console.log("cannot load more messages in this situation");
+      console.error("cannot load more messages in this situation");
     }
   };
 

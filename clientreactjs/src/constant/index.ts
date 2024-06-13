@@ -50,11 +50,6 @@ export const sidebarLink = [
 
 export const sidebarFriendPage = [
   {
-    label: "Trang chủ",
-    route: "/",
-    icon: "/home.svg",
-  },
-  {
     label: "Danh sách bạn bè",
     route: "/friends",
     icon: "/add-friend.svg",

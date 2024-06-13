@@ -63,22 +63,10 @@ const App = () => {
             <Route path="/celebrate" element={<Developing />} />
             <Route path="/saved" element={<Developing />} />
 
-            {/* Group Route */}
-            <Route path="/group" element={<GroupLayout />}>
-              <Route path="/group/create" element={<CreateGroup />} />
-              <Route path="/group/discover" element={<DiscoverGroup />} />
-              <Route path="/group/my-group" element={<MyGroup />} />
-              <Route path="/group/feed" element={<PostOfGroup />} />
-              <Route path="/group/joined" element={<GroupJoined />} />
-              <Route path="/group/:groupId" element={<GroupDetail />} />
-              <Route path="/group/search-group" element={<SearchGroupList />} />
-            </Route>
             {/* Search Route */}
             <Route path="/search" element={<SearchLayout />}>
               <Route path="/search" element={<SearchPage />} />
-              <Route path="/search/posts" element={<SearchPostList />} />
               <Route path="/search/users" element={<SearchUserList />} />
-              <Route path="/search/groups" element={<SearchGroupList />} />
             </Route>
           </Route>
 

@@ -75,7 +75,7 @@ function InfoList() {
           }
         }
 
-        console.log(chattingPerson);
+        // console.log(chattingPerson);
         //handle render for private chat
         if (
           chattingPerson &&
@@ -96,7 +96,7 @@ function InfoList() {
         participants?.length > 0 &&
         participants?.length >= 3
       ) {
-        console.log(chosenRoom);
+        // console.log(chosenRoom);
         if (chosenRoom?.avatar && chosenRoom?.avatar?.length > 0) {
           setImagePath(chosenRoom?.avatar);
         } else {

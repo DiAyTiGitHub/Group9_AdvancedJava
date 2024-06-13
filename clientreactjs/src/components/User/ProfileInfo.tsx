@@ -144,12 +144,12 @@ function ProfileInfo({ userProfile, isLoading, handleChangeTab }: Props) {
           </div>
           {currentUser?.id === userProfile?.id ? (
             <div className="flex items-center gap-3">
-              <UpdateResult>
+              {/* <UpdateResult>
                 <div className="flex items-center gap-2 cursor-pointer bg-blue-2 px-3 py-2 font-medium rounded-md">
                   <Icon name="BookOpen" size={16} />
                   <span className="">Cập nhật thành tích học tập</span>
                 </div>
-              </UpdateResult>
+              </UpdateResult> */}
 
               <EditUserModal>
                 <div className="flex gap-2 items-center text-[15px] bg-blue-500 p-2 rounded-md text-white cursor-pointer">
@@ -214,7 +214,7 @@ function ProfileInfo({ userProfile, isLoading, handleChangeTab }: Props) {
           <TabList onChange={handleChangeTab} aria-label="basic tabs example">
             <Tab label="Bảng tin" className="tabStyle" value="0" />
             <Tab label="Bạn bè" className="tabStyle" value="1" />
-            <Tab label="Thành tích" className="tabStyle" value="2" />
+            {/* <Tab label="Thành tích" className="tabStyle" value="2" /> */}
           </TabList>
         </div>
       </div>

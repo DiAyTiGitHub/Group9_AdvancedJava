@@ -72,12 +72,13 @@ function Profile() {
             isCurrentUser={isCurrentUser}
           />
         </TabPanel>
+        
         <TabPanel className="p-0" value="1">
           <UserFriends />
         </TabPanel>
-        <TabPanel className="p-0" value="2">
+        {/* <TabPanel className="p-0" value="2">
           <Achievements />
-        </TabPanel>
+        </TabPanel> */}
       </TabContext>
     </div>
   );
