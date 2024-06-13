@@ -31,9 +31,7 @@ public class UserDto {
     private String role;
     private String phoneNumber;
     private Boolean disable;
-    private ClassroomDto classroomDto;
     private RelationshipDto relationshipDto;
-    private Set<MemberDto> groups;
     private List<UserDto> mutualFriends;
 
 //    private Set<UserCourse> userCourses;
@@ -60,7 +58,5 @@ public class UserDto {
         this.avatar = entity.getAvatar();
         this.background = entity.getBackground();
         this.disable = entity.isDisable();
-        if (entity.getClassroom() != null)
-            this.classroomDto = new ClassroomDto(entity.getClassroom());
     }
 }

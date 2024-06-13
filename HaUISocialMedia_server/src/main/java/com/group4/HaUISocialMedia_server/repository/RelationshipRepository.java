@@ -1,6 +1,5 @@
 package com.group4.HaUISocialMedia_server.repository;
 
-import com.group4.HaUISocialMedia_server.entity.Like;
 import com.group4.HaUISocialMedia_server.entity.Relationship;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -15,11 +15,5 @@ public interface NotificationService {
 
     public NotificationDto update(NotificationDto notificationDto);
 
-    public Boolean deleteById(UUID id);
-
-    public Set<NotificationDto> getAnyNotification(SearchObject searchObject);
-
     public Set<NotificationDto> pagingNotification(SearchObject searchObject);
-
-    public void deleteNotificationByIdPost(UUID idPost);
 }

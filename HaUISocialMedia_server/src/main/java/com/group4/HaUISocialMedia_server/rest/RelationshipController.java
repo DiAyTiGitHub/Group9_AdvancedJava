@@ -1,6 +1,5 @@
 package com.group4.HaUISocialMedia_server.rest;
 
-import com.group4.HaUISocialMedia_server.dto.CourseDto;
 import com.group4.HaUISocialMedia_server.dto.RelationshipDto;
 import com.group4.HaUISocialMedia_server.dto.SearchObject;
 import com.group4.HaUISocialMedia_server.dto.UserDto;

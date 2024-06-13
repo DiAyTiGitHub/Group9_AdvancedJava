@@ -48,7 +48,7 @@ const App = () => {
         {/* private routes */}
         <Route>
           <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
+            {/* <Route index element={<HomePage />} /> */}
             <Route path="/profile/edit" element={<EditProfile />} />
 
             <Route path="/friends" element={<FriendPage />} />
@@ -58,7 +58,7 @@ const App = () => {
             <Route path="/post/:postId" element={<PostDetail />} />
             <Route path="/leaderboard" element={<LeaderBoard />} />
             <Route path="/search" element={<SearchPage />} />
-            <Route path="/messenger-v2" element={<ChatV2Index />} />
+            <Route index path="/messenger-v2" element={<ChatV2Index />} />
             <Route path="/event" element={<Developing />} />
             <Route path="/celebrate" element={<Developing />} />
             <Route path="/saved" element={<Developing />} />

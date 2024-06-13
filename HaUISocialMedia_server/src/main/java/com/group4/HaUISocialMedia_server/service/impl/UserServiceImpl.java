@@ -1,21 +1,15 @@
 package com.group4.HaUISocialMedia_server.service.impl;
 
-import com.group4.HaUISocialMedia_server.dto.PostDto;
 import com.group4.HaUISocialMedia_server.dto.RelationshipDto;
 import com.group4.HaUISocialMedia_server.dto.SearchObject;
 import com.group4.HaUISocialMedia_server.dto.UserDto;
-import com.group4.HaUISocialMedia_server.entity.Post;
 import com.group4.HaUISocialMedia_server.entity.Relationship;
 import com.group4.HaUISocialMedia_server.entity.User;
-import com.group4.HaUISocialMedia_server.repository.ClassroomRepository;
-import com.group4.HaUISocialMedia_server.repository.PostImageRepository;
 import com.group4.HaUISocialMedia_server.repository.RelationshipRepository;
 import com.group4.HaUISocialMedia_server.repository.UserRepository;
-import com.group4.HaUISocialMedia_server.service.PostService;
 import com.group4.HaUISocialMedia_server.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,19 +26,10 @@ public class UserServiceImpl implements UserService {
     private RelationshipServiceImpl relationshipService;
 
     @Autowired
-    private ClassroomRepository classroomRepository;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
     private RelationshipRepository relationshipRepository;
-
-    @Autowired
-    private PostImageRepository postImageRepository;
-
-    @Autowired
-    private PostService postService;
 
     @Override
     public List<UserDto> getAllUsers() {
@@ -128,17 +113,6 @@ public class UserServiceImpl implements UserService {
         if (entity == null)
             return null;
 
-        //auto create background post
-        if (dto.getBackground() != null) {
-            if (!dto.getBackground().equals(entity.getBackground()))
-                postService.updateBackgroundImage(dto.getBackground());
-        }
-        //auto create avatar post
-        if (dto.getAvatar() != null) {
-            if (!dto.getAvatar().equals(entity.getAvatar()))
-                postService.updateProfileImage(dto.getAvatar());
-        }
-
         entity.setCode(dto.getCode());
         entity.setFirstName(dto.getFirstName());
         entity.setLastName(dto.getLastName());
@@ -150,9 +124,6 @@ public class UserServiceImpl implements UserService {
         entity.setAvatar(dto.getAvatar());
         entity.setPhoneNumber(dto.getPhoneNumber());
         entity.setBackground(dto.getBackground());
-
-        if (dto.getClassroomDto() != null)
-            entity.setClassroom(classroomRepository.findById(dto.getClassroomDto().getId()).orElse(null));
 
         userRepository.saveAndFlush(entity);
 

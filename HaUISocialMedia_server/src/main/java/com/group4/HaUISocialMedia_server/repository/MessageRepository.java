@@ -1,7 +1,6 @@
 package com.group4.HaUISocialMedia_server.repository;
 
 import com.group4.HaUISocialMedia_server.dto.MessageDto;
-import com.group4.HaUISocialMedia_server.entity.Classroom;
 import com.group4.HaUISocialMedia_server.entity.Message;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;

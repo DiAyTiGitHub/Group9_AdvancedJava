@@ -62,14 +62,6 @@ public class User implements Serializable {
 
     private boolean disable;
 
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    @JsonIgnore
-    private Classroom classroom;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<UserCourse> userCourses;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Message> messages;
 
@@ -85,33 +77,9 @@ public class User implements Serializable {
     @JsonIgnore
     private Set<Relationship> receivers;
 
-    @OneToMany(mappedBy = "userLike")
-    private Set<Like> likes;
-
-    @OneToMany(mappedBy = "owner")
-    private Set<Comment> comments;
-
     @OneToMany(mappedBy = "actor")
     private Set<Notification> createdNotifications;
 
     @OneToMany(mappedBy = "owner")
     private Set<Notification> notifications;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private BoardRecord boardRecord;
-
-    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name = "users_roles",
-//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-//    )
-//    private Set<Role> roles;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Group> groupCreated;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Member> groups;
 }
