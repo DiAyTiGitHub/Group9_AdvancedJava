@@ -3,6 +3,7 @@ import { IUser } from "@/types";
 import CustomButtonFriend from "../CustomButtonFriend";
 import { useStore } from "@/stores";
 import MutualFriends from "@/components/User/ui/MutualFriend";
+import { Grid } from "@mui/material";
 
 type Props = {
   suggestFriends: any;
@@ -18,55 +19,62 @@ const ListSuggestFriend = ({ suggestFriends }: Props) => {
         <NoData title="Chưa có bạn bè gợi ý" style="h-[100px] w-[100px]" />
       }
 
-      <div className=" grid grid-cols-4 gap-5 my-10">
+      <Grid container spacing={2}>
+
         {suggestFriends?.map((friend: IUser) => (
-          <div
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            lg={3}
             key={friend?.id}
-            className="cursor-pointer flex  gap-5 pb-5 bg-blue-2 rounded-xl w-full"
           >
-            <div className="flex flex-col gap-3 justify-between flex-1 ">
-              <div
-                className="rounded-xl space-y-2 overflow-hidden"
-                onClick={() =>
-                  (window.location.href = `/profile/${friend?.id}`)
-                }
-              >
-                <img
-                  src={friend.avatar || "/person.jpg"}
-                  alt="avatar"
-                  className="w-full h-[200px] object-cover "
-                />
-                <p
-                  className=" font-bold px-5"
+            <div className="friendCard cursor-pointer pb-2 br-6">
+              <div className="flex flex-col gap-3 justify-between flex-1 ">
+                <div
+                  className="rounded-xl space-y-2 overflow-hidden"
                   onClick={() =>
                     (window.location.href = `/profile/${friend?.id}`)
                   }
                 >
-                  {friend.lastName} {friend.firstName}
-                </p>
-              </div>
+                  <img
+                    src={friend?.avatar || "/person.jpg"}
+                    alt="avatar"
+                    className="object-cover friendAvatar"
+                  />
+                  <p
+                    className=" font-bold px-5"
+                    onClick={() =>
+                      (window.location.href = `/profile/${friend?.id}`)
+                    }
+                  >
+                    {friend?.lastName} {friend?.firstName}
+                  </p>
+                </div>
 
-              <div className="px-5">
-                {friend?.mutualFriends?.length > 0 && (
-                  <MutualFriends mutualFriends={friend?.mutualFriends} />
-                )}
-              </div>
+                <div className="px-5">
+                  {friend?.mutualFriends?.length > 0 && (
+                    <MutualFriends mutualFriends={friend?.mutualFriends} />
+                  )}
+                </div>
 
-              <div className="w-full px-5 ">
-                <CustomButtonFriend
-                  icon="UserPlus"
-                  handleFn={addFriend}
-                  title="Thêm bạn bè"
-                  message="Đã gửi lời mời"
-                  id={friend.id}
-                />
+                <div className="w-full px-5 ">
+                  <CustomButtonFriend
+                    icon="UserPlus"
+                    handleFn={addFriend}
+                    title="Thêm bạn bè"
+                    message="Đã gửi lời mời"
+                    id={friend.id}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </Grid>
         ))}
 
 
-      </div>
+      </Grid>
+
     </>
   )
 };

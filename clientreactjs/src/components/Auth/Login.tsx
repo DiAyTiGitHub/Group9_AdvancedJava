@@ -76,7 +76,7 @@ function Login() {
             <h1 className="text-3xl font-semibold mb-5 ">
               Đại Học Công Nghiệp Hà Nội
             </h1>
-            <p>HaUI Social Media Network</p>
+            <p>BÀI TẬP LỚN MÔN LẬP TRÌNH JAVA NÂNG CAO</p>
           </div>
 
           <Form {...form}>
