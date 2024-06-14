@@ -9,6 +9,7 @@ import com.group4.HaUISocialMedia_server.service.UserService;
 import com.group4.HaUISocialMedia_server.service.impl.UserServiceImpl;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,17 +53,16 @@ public class AdminLogin extends javax.swing.JFrame {
                     };
                     tableModel.addRow(rowData);
                 }
-            }
+        }
     public AdminLogin(){
         initComponents();
     }
-   private void addTableMouseListener() {
+    private void addTableMouseListener() {
         datatable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selectedRow = datatable.getSelectedRow();
                 if (selectedRow != -1) {
-                    // Extract data from the selected row
                     String id = (String) tableModel.getValueAt(selectedRow, 0);
                     String code = (String) tableModel.getValueAt(selectedRow, 1);
                     String username = (String) tableModel.getValueAt(selectedRow, 2);
@@ -72,33 +72,58 @@ public class AdminLogin extends javax.swing.JFrame {
                     String address = (String) tableModel.getValueAt(selectedRow, 6);
                     String birthDateStr = (String) tableModel.getValueAt(selectedRow, 7);
                     Date birthDate = null;
-                    try {
-                        birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthDateStr);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                // Check if birthDateStr is not null or empty before parsing
+                    if (birthDateStr != null && !birthDateStr.isEmpty()) {
+                        try {
+                            birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthDateStr);
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                     String gender = (String) tableModel.getValueAt(selectedRow, 8);
                     String phone = (String) tableModel.getValueAt(selectedRow, 9);
                     String status = (String) tableModel.getValueAt(selectedRow, 10);
-
-                    // Open the edit dialog
-                    UserEditDialog editDialog = new UserEditDialog(
-                            AdminLogin.this, id, code, username, email, firstName, lastName,
+                    
+                    InfoUserDetail infoUserDetail = new InfoUserDetail(
+                            code, username, email, firstName, lastName,
                             address, birthDate, gender, phone, status
                     );
-                    editDialog.setVisible(true);
-
-                    if (editDialog.isSaved()) {
-                        // Update the table with the new data
-                        tableModel.setValueAt(editDialog.getUsername(), selectedRow, 2);
-                        tableModel.setValueAt(editDialog.getEmail(), selectedRow, 3);
-                        tableModel.setValueAt(editDialog.getFirstName(), selectedRow, 4);
-                        tableModel.setValueAt(editDialog.getLastName(), selectedRow, 5);
-                        tableModel.setValueAt(editDialog.getAddress(), selectedRow, 6);
-                        tableModel.setValueAt(new SimpleDateFormat("yyyy-MM-dd").format(editDialog.getBirthDate()), selectedRow, 7);
-                        tableModel.setValueAt(editDialog.getGender(), selectedRow, 8);
-                        tableModel.setValueAt(editDialog.getPhone(), selectedRow, 9);
-                        tableModel.setValueAt(editDialog.getStatus(), selectedRow, 10);
+                    System.out.println("1");
+                    infoUserDetail.setVisible(true);
+                    System.out.println(infoUserDetail.isUpdate());                 
+                    if (infoUserDetail.isUpdate()) {
+                        // Cap nhat CSDL
+                        System.out.println("22");
+                        UserDto us = new UserDto();
+                        System.out.println("3");
+                        us.setId(UUID.fromString(id));
+                        System.out.println("4");
+                        us.setUsername(infoUserDetail.getUsername());
+                        us.setEmail(infoUserDetail.getEmail());
+                        us.setFirstName(infoUserDetail.getFirstname());
+                        us.setLastName(infoUserDetail.getLastname());
+                        us.setAddress(infoUserDetail.getAddress());
+                        System.out.println("11");
+                        us.setBirthDate(infoUserDetail.getBirthdate());
+                        System.out.println("22");
+                        us.setGender(infoUserDetail.getGender().equalsIgnoreCase("Male"));
+                        us.setPhoneNumber(infoUserDetail.getPhoneNumber());
+                        us.setDisable(infoUserDetail.getStatus().equalsIgnoreCase("Active"));
+                        
+                        UserDto test = userService.updateUserV2(us);
+                        if(test== null)
+                        {
+                            System.out.println("Loi");
+                        }
+                        pushData(userService.getUsersNotVoided());
+                    }
+                    if(infoUserDetail.isDelete())
+                    {
+                        // Cap nhat CSDL và load form
+                        UserDto uss = new UserDto();
+                        uss.setId(UUID.fromString(id));
+                        userService.deleteUserByVoided(uss);
+                        pushData(userService.getUsersNotVoided());
                     }
                 }
             }
