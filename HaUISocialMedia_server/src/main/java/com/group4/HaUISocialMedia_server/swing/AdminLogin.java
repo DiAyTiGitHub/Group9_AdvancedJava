@@ -35,102 +35,57 @@ public class AdminLogin extends javax.swing.JFrame {
         List<UserDto> data = userService.getUsersNotVoided();
         pushData(data);
     }
-        private void pushData(List<UserDto> data) {              
-                tableModel = (DefaultTableModel) datatable.getModel();
-                for (UserDto user : data) {
-                    String[] rowData = {
-                        user.getId() != null ? user.getId().toString() : "",  // ID
-                        user.getCode() != null ? user.getCode() : "",  // Code
-                        user.getUsername() != null ? user.getUsername() : "",  // Username
-                        user.getEmail() != null ? user.getEmail() : "",  // Email
-                        user.getFirstName() != null ? user.getFirstName() : "",  // First Name
-                        user.getLastName() != null ? user.getLastName() : "",  // Last Name
-                        user.getAddress() != null ? user.getAddress() : "",  // Address
-                        user.getBirthDate() != null ? user.getBirthDate().toString() : "",  // Birth day
-                        user.isGender() ? "Male" : "Female",  // Gender
-                        user.getPhoneNumber() != null ? user.getPhoneNumber() : "",  // Phone
-                        user.getDisable() ? "Disabled" : "Active"  // Status
-                    };
-                    tableModel.addRow(rowData);
-                }
+
+    private void pushData(List<UserDto> data) {
+        tableModel = (DefaultTableModel) datatable.getModel();
+        for (UserDto user : data) {
+            String[] rowData = {
+                user.getId() != null ? user.getId().toString() : "", // ID
+                user.getCode() != null ? user.getCode() : "", // Code
+                user.getUsername() != null ? user.getUsername() : "", // Username
+                user.getEmail() != null ? user.getEmail() : "", // Email
+                user.getFirstName() != null ? user.getFirstName() : "", // First Name
+                user.getLastName() != null ? user.getLastName() : "", // Last Name
+                user.getAddress() != null ? user.getAddress() : "", // Address
+                user.getBirthDate() != null ? user.getBirthDate().toString() : "", // Birth day
+                user.isGender() ? "Male" : "Female", // Gender
+                user.getPhoneNumber() != null ? user.getPhoneNumber() : "", // Phone
+                user.getDisable() ? "Disabled" : "Active" // Status
+            };
+            tableModel.addRow(rowData);
         }
-    public AdminLogin(){
+    }
+
+    public AdminLogin() {
         initComponents();
     }
+
     private void addTableMouseListener() {
         datatable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = datatable.getSelectedRow();
-                if (selectedRow != -1) {
-                    String id = (String) tableModel.getValueAt(selectedRow, 0);
-                    String code = (String) tableModel.getValueAt(selectedRow, 1);
-                    String username = (String) tableModel.getValueAt(selectedRow, 2);
-                    String email = (String) tableModel.getValueAt(selectedRow, 3);
-                    String firstName = (String) tableModel.getValueAt(selectedRow, 4);
-                    String lastName = (String) tableModel.getValueAt(selectedRow, 5);
-                    String address = (String) tableModel.getValueAt(selectedRow, 6);
-                    String birthDateStr = (String) tableModel.getValueAt(selectedRow, 7);
-                    Date birthDate = null;
-                // Check if birthDateStr is not null or empty before parsing
-                    if (birthDateStr != null && !birthDateStr.isEmpty()) {
-                        try {
-                            birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthDateStr);
-                        } catch (ParseException ex) {
-                            ex.printStackTrace();
+            public void mouseClicked(MouseEvent evt) {
+                int row = datatable.rowAtPoint(evt.getPoint());
+                if (row >= 0) {
+                    try {
+                        String userId = datatable.getValueAt(row, 0).toString();
+                        UserDto userDto = userService.getByIdNew(UUID.fromString(userId));
+                        if (userDto != null) {
+                            UserEditDialog popup = new UserEditDialog(userService, userDto, tableModel, row);
+                            popup.setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Người dùng không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                    }
-                    String gender = (String) tableModel.getValueAt(selectedRow, 8);
-                    String phone = (String) tableModel.getValueAt(selectedRow, 9);
-                    String status = (String) tableModel.getValueAt(selectedRow, 10);
-                    
-                    InfoUserDetail infoUserDetail = new InfoUserDetail(
-                            code, username, email, firstName, lastName,
-                            address, birthDate, gender, phone, status
-                    );
-                    System.out.println("1");
-                    infoUserDetail.setVisible(true);
-                    System.out.println(infoUserDetail.isUpdate());                 
-                    if (infoUserDetail.isUpdate()) {
-                        // Cap nhat CSDL
-                        System.out.println("22");
-                        UserDto us = new UserDto();
-                        System.out.println("3");
-                        us.setId(UUID.fromString(id));
-                        System.out.println("4");
-                        us.setUsername(infoUserDetail.getUsername());
-                        us.setEmail(infoUserDetail.getEmail());
-                        us.setFirstName(infoUserDetail.getFirstname());
-                        us.setLastName(infoUserDetail.getLastname());
-                        us.setAddress(infoUserDetail.getAddress());
-                        System.out.println("11");
-                        us.setBirthDate(infoUserDetail.getBirthdate());
-                        System.out.println("22");
-                        us.setGender(infoUserDetail.getGender().equalsIgnoreCase("Male"));
-                        us.setPhoneNumber(infoUserDetail.getPhoneNumber());
-                        us.setDisable(infoUserDetail.getStatus().equalsIgnoreCase("Active"));
-                        
-                        UserDto test = userService.updateUserV2(us);
-                        if(test== null)
-                        {
-                            System.out.println("Loi");
-                        }
-                        pushData(userService.getUsersNotVoided());
-                    }
-                    if(infoUserDetail.isDelete())
-                    {
-                        // Cap nhat CSDL và load form
-                        UserDto uss = new UserDto();
-                        uss.setId(UUID.fromString(id));
-                        userService.deleteUserByVoided(uss);
-                        pushData(userService.getUsersNotVoided());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "ID sai", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         });
     }
+
     private UserService userService;
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -307,14 +262,14 @@ public class AdminLogin extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        UserCreateDialog dialog = new UserCreateDialog(userService, tableModel);
+        dialog.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    
-    
     /**
      * @param args the command line arguments
      */
@@ -349,8 +304,7 @@ public class AdminLogin extends javax.swing.JFrame {
             }
         });
     }
-    
-   
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable datatable;

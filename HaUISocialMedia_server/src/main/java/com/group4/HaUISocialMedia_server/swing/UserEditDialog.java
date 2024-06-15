@@ -1,148 +1,275 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.group4.HaUISocialMedia_server.swing;
 
+import com.group4.HaUISocialMedia_server.dto.UserDto;
+import com.group4.HaUISocialMedia_server.service.UserService;
 import com.toedter.calendar.JDateChooser;
-import java.awt.Frame;
-import java.awt.GridLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.text.SimpleDateFormat;
+import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author dater
- */
 public class UserEditDialog extends JDialog {
-    private JTextField usernameField;
-    private JTextField emailField;
-    private JTextField firstNameField;
-    private JTextField lastNameField;
-    private JTextField addressField;
-    private JTextField phoneField;
-    private JComboBox<String> genderComboBox;
-    private JComboBox<String> statusComboBox;
-    private JDateChooser birthDateChooser;
-    private boolean saved;
 
-    public UserEditDialog(Frame parent, String id, String code, String username, String email,
-                          String firstName, String lastName, String address, Date birthDate,
-                          String gender, String phone, String status) {
-        super(parent, "Edit User", true);
-        setLayout(new GridLayout(0, 2));
+    private UserService userService;
+    private UserDto userDto;
+    private DefaultTableModel tableModel;
+    private int rowIndex;
 
-        add(new JLabel("ID:"));
-        add(new JLabel(id));
+    private JTextField txtCode;
+    private JTextField txtUsername;
+    private JTextField txtEmail;
+    private JTextField txtFirstName;
+    private JTextField txtLastName;
+    private JTextField txtAddress;
+    private JDateChooser dateChooser;
+    private JComboBox<String> cbGender;
+    private JTextField txtPhone;
+    private JComboBox<String> cbStatus;
+    private JLabel lblAvatar;
 
-        add(new JLabel("Code:"));
-        add(new JLabel(code));
+    public UserEditDialog(UserService userService, UserDto userDto, DefaultTableModel tableModel, int rowIndex) {
+        this.userService = userService;
+        this.userDto = userDto;
+        this.tableModel = tableModel;
+        this.rowIndex = rowIndex;
 
-        add(new JLabel("Username:"));
-        usernameField = new JTextField(username);
-        add(usernameField);
+        setTitle("Chỉnh sửa thông tin tài khoản");
+        setSize(700, 575); // Increase size to accommodate larger avatar
+        setLocationRelativeTo(null);
 
-        add(new JLabel("Email:"));
-        emailField = new JTextField(email);
-        add(emailField);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setDividerLocation(0.3);
 
-        add(new JLabel("First Name:"));
-        firstNameField = new JTextField(firstName);
-        add(firstNameField);
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        initLeftPanel(leftPanel);
 
-        add(new JLabel("Last Name:"));
-        lastNameField = new JTextField(lastName);
-        add(lastNameField);
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new GridBagLayout());
+        initRightPanel(rightPanel);
 
-        add(new JLabel("Address:"));
-        addressField = new JTextField(address);
-        add(addressField);
+        splitPane.setLeftComponent(leftPanel);
+        splitPane.setRightComponent(rightPanel);
+        add(splitPane);
+    }
 
-        add(new JLabel("Birth Date:"));
-        birthDateChooser = new JDateChooser(birthDate);
-        add(birthDateChooser);
+    private void initLeftPanel(JPanel panel) {
+        // Avatar panel (assuming it spans the entire width as before)
+        JPanel avatarPanel = new JPanel(new BorderLayout());
+        lblAvatar = new JLabel("Avatar", SwingConstants.CENTER);  // Placeholder for avatar
+        lblAvatar.setPreferredSize(new Dimension(150, 150)); // Increase size for avatar
+        lblAvatar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        avatarPanel.add(lblAvatar, BorderLayout.CENTER);
+        panel.add(avatarPanel);
 
-        add(new JLabel("Gender:"));
-        genderComboBox = new JComboBox<>(new String[]{"Male", "Female"});
-        genderComboBox.setSelectedItem(gender);
-        add(genderComboBox);
+        // Code label and text field on the same line
+        JPanel codePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        codePanel.add(new JLabel("Code:"));
+        txtCode = new JTextField(userDto.getCode(), 15); // Set column size to 10 for single line
+        txtCode.setPreferredSize(new Dimension(150, 35)); // Adjust size as needed
+        codePanel.add(txtCode);
+        panel.add(codePanel);
 
-        add(new JLabel("Phone:"));
-        phoneField = new JTextField(phone);
-        add(phoneField);
+        // Separator line
+        JSeparator separator = new JSeparator();
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        panel.add(separator);
 
-        add(new JLabel("Status:"));
-        statusComboBox = new JComboBox<>(new String[]{"Active", "Disabled"});
-        statusComboBox.setSelectedItem(status);
-        add(statusComboBox);
+        panel.add(Box.createVerticalStrut(35)); // Add some vertical spacing
 
-        JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(new ActionListener() {
+        // Update button on its own line
+        JButton btnUpdate = new JButton("Update");
+        btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saved = true;
-                setVisible(false);
+                updateUserDetails();
             }
         });
-        add(saveButton);
+        panel.add(btnUpdate);
+        panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
 
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
+        // Delete button on its own line
+        JButton btnDelete = new JButton("Delete");
+        btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saved = false;
-                setVisible(false);
+                deleteUser();
             }
         });
-        add(cancelButton);
+        panel.add(btnDelete);
+        panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
 
-        pack();
-        setLocationRelativeTo(parent);
+        // Cancel button on its own line
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        panel.add(btnCancel);
+        panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
     }
 
-    public boolean isSaved() {
-        return saved;
+    private void initRightPanel(JPanel panel) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Default insets
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // THÔNG TIN TÀI KHOẢN label
+        JLabel titleLabel = new JLabel("THÔNG TIN TÀI KHOẢN", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 18));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.PAGE_START; // Align title to the top
+        gbc.insets = new Insets(10, 10, 20, 10); // Top margin of 10px, bottom margin of 20px
+        panel.add(titleLabel, gbc);
+
+        // Username
+        addLabelAndTextField(panel, "Username:", txtUsername = new JTextField(userDto.getUsername()), gbc, 1);
+
+        // Email
+        addLabelAndTextField(panel, "Email:", txtEmail = new JTextField(userDto.getEmail()), gbc, 2);
+
+        // First Name
+        addLabelAndTextField(panel, "First Name:", txtFirstName = new JTextField(userDto.getFirstName()), gbc, 3);
+
+        // Last Name
+        addLabelAndTextField(panel, "Last Name:", txtLastName = new JTextField(userDto.getLastName()), gbc, 4);
+
+        // Address
+        addLabelAndTextField(panel, "Address:", txtAddress = new JTextField(userDto.getAddress()), gbc, 5);
+
+        // Birth Date (using JDateChooser)
+        addLabelAndDateChooser(panel, "Birth Date:", dateChooser = new JDateChooser(), gbc, 6);
+        if (userDto.getBirthDate() != null) {
+            dateChooser.setDate(userDto.getBirthDate());
+        }
+
+        // Gender (using JComboBox)
+        addLabelAndComboBox(panel, "Gender:", cbGender = new JComboBox<>(new String[]{"Male", "Female"}), gbc, 7);
+        cbGender.setSelectedItem(userDto.isGender() ? "Male" : "Female");
+
+        // Phone
+        addLabelAndTextField(panel, "Phone:", txtPhone = new JTextField(userDto.getPhoneNumber()), gbc, 8);
+
+        // Status (using JComboBox)
+        addLabelAndComboBox(panel, "Status:", cbStatus = new JComboBox<>(new String[]{"Active", "Disabled"}), gbc, 9);
+        cbStatus.setSelectedItem(userDto.getDisable() ? "Disabled" : "Active");
+
+        // Reset insets for the last component
+        gbc.insets = new Insets(10, 10, 10, 10); // Default insets
+
+        // Fill remaining space
+        gbc.weighty = 1.0;
+        panel.add(new JPanel(), gbc);
     }
 
-    public String getUsername() {
-        return usernameField.getText();
+    private void addLabelAndTextField(JPanel panel, String labelText, JTextField textField, GridBagConstraints gbc, int row) {
+        JLabel label = new JLabel(labelText);
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(label, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(textField, gbc);
     }
 
-    public String getEmail() {
-        return emailField.getText();
+    private void addLabelAndDateChooser(JPanel panel, String labelText, JDateChooser dateChooser, GridBagConstraints gbc, int row) {
+        JLabel label = new JLabel(labelText);
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(label, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(dateChooser, gbc);
     }
 
-    public String getFirstName() {
-        return firstNameField.getText();
+    private void addLabelAndComboBox(JPanel panel, String labelText, JComboBox<String> comboBox, GridBagConstraints gbc, int row) {
+        JLabel label = new JLabel(labelText);
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(label, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(comboBox, gbc);
     }
 
-    public String getLastName() {
-        return lastNameField.getText();
+    private void updateUserDetails() {
+        String username = txtUsername.getText().trim();
+        String email = txtEmail.getText().trim();
+        String firstName = txtFirstName.getText().trim();
+
+        // Kiểm tra các trường thông tin bắt buộc
+        if (username.isEmpty() || email.isEmpty() || firstName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các thông tin bắt buộc (Username, Email, First Name)", "Missing Information", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            userDto.setCode(txtCode.getText());
+            userDto.setUsername(username);
+            userDto.setEmail(email);
+            userDto.setFirstName(firstName);
+            userDto.setLastName(txtLastName.getText());
+            userDto.setAddress(txtAddress.getText());
+            userDto.setBirthDate(dateChooser.getDate());
+            userDto.setGender(cbGender.getSelectedItem().equals("Male"));
+            userDto.setPhoneNumber(txtPhone.getText());
+            userDto.setDisable(cbStatus.getSelectedItem().equals("Disabled"));
+
+            UserDto updatedUser = userService.updateUserV2(userDto);
+
+            if (updatedUser != null) {
+                tableModel.setValueAt(updatedUser.getCode(), rowIndex, 1);
+                tableModel.setValueAt(updatedUser.getUsername(), rowIndex, 2);
+                tableModel.setValueAt(updatedUser.getEmail(), rowIndex, 3);
+                tableModel.setValueAt(updatedUser.getFirstName(), rowIndex, 4);
+                tableModel.setValueAt(updatedUser.getLastName(), rowIndex, 5);
+                tableModel.setValueAt(updatedUser.getAddress(), rowIndex, 6);
+                tableModel.setValueAt(updatedUser.getBirthDate().toString(), rowIndex, 7);
+                tableModel.setValueAt(updatedUser.isGender() ? "Male" : "Female", rowIndex, 8);
+                tableModel.setValueAt(updatedUser.getPhoneNumber(), rowIndex, 9);
+                tableModel.setValueAt(updatedUser.getDisable() ? "Disabled" : "Active", rowIndex, 10);
+
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Không thể cập nhật thông tin người dùng", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật thông tin người dùng", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    public String getAddress() {
-        return addressField.getText();
-    }
-
-    public Date getBirthDate() {
-        return birthDateChooser.getDate();
-    }
-
-    public String getGender() {
-        return (String) genderComboBox.getSelectedItem();
-    }
-
-    public String getPhone() {
-        return phoneField.getText();
-    }
-
-    public String getStatus() {
-        return (String) statusComboBox.getSelectedItem();
+    private void deleteUser() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa người dùng này?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                UserDto voidedUser = userService.deleteUserByVoided(userDto);
+                if (voidedUser != null) {
+                    tableModel.removeRow(rowIndex);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không thể xóa thông tin người dùng", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa thông tin người dùng", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

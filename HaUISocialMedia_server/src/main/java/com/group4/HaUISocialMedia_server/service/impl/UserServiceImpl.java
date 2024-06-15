@@ -14,9 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     @Autowired
     private RelationshipRepository relationshipRepository;
 
@@ -260,6 +265,19 @@ public class UserServiceImpl implements UserService {
 
 
     //FUNCTION NEWLY WRITTEN FOR ADMIN SWING
+    
+    // new func
+    @Override
+    public UserDto getByIdNew(UUID userId) {
+        if (userId == null) return null;
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return null;
+
+        return new UserDto(user);
+    }
+
+    
     @Override
     public UserDto createUser(UserDto userDto) {
         if (userDto == null) return null;
@@ -268,6 +286,7 @@ public class UserServiceImpl implements UserService {
 
         if (userDto.getUsername() != null)
             user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         if (userDto.getCode() != null)
             user.setCode(userDto.getCode());
         if (userDto.getFirstName() != null)
@@ -290,6 +309,7 @@ public class UserServiceImpl implements UserService {
             user.setPhoneNumber(userDto.getPhoneNumber());
         if (userDto.getDisable() != null)
             user.setDisable(userDto.getDisable());
+        
 
         // Save the user entity to the repository
         user = userRepository.save(user);
