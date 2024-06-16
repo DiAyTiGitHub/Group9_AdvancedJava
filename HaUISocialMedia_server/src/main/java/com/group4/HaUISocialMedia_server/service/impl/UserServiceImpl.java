@@ -276,6 +276,19 @@ public class UserServiceImpl implements UserService {
 
         return new UserDto(user);
     }
+    
+    @Override
+    public List<UserDto> searchByUsernameNew(SearchObject searchObject) {
+        if (searchObject == null) return null;
+
+        List<UserDto> res = new ArrayList<>();
+        List<User> validUsers = userRepository.getByUserName(searchObject.getKeyWord(), searchObject.getPageSize(), searchObject.getPageIndex() - 1);
+        for (User user : validUsers) {
+            UserDto person = new UserDto(user);
+            res.add(person);
+        }
+        return res;
+    }
 
     
     @Override

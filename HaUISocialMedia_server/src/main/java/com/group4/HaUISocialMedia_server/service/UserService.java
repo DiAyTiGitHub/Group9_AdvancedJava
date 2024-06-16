@@ -40,6 +40,8 @@ public interface UserService {
 
 
     //FUNCTION NEWLY WRITTEN FOR ADMIN SWING
+    public List<UserDto> searchByUsernameNew(SearchObject searchObject);
+    
     public UserDto getByIdNew(UUID userId);
     
     public UserDto createUser(UserDto userDto);

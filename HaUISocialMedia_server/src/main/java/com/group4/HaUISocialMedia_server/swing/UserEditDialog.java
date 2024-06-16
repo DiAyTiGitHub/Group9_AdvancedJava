@@ -57,7 +57,6 @@ public class UserEditDialog extends JDialog {
     }
 
     private void initLeftPanel(JPanel panel) {
-        // Avatar panel (assuming it spans the entire width as before)
         JPanel avatarPanel = new JPanel(new BorderLayout());
         lblAvatar = new JLabel("Avatar", SwingConstants.CENTER);  // Placeholder for avatar
         lblAvatar.setPreferredSize(new Dimension(150, 150)); // Increase size for avatar
@@ -65,23 +64,21 @@ public class UserEditDialog extends JDialog {
         avatarPanel.add(lblAvatar, BorderLayout.CENTER);
         panel.add(avatarPanel);
 
-        // Code label and text field on the same line
         JPanel codePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         codePanel.add(new JLabel("Code:"));
-        txtCode = new JTextField(userDto.getCode(), 15); // Set column size to 10 for single line
-        txtCode.setPreferredSize(new Dimension(150, 35)); // Adjust size as needed
+        txtCode = new JTextField(userDto.getCode(), 15); 
+        txtCode.setPreferredSize(new Dimension(150, 35)); 
         codePanel.add(txtCode);
         panel.add(codePanel);
 
-        // Separator line
         JSeparator separator = new JSeparator();
         separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
         panel.add(separator);
 
-        panel.add(Box.createVerticalStrut(35)); // Add some vertical spacing
+        panel.add(Box.createVerticalStrut(35)); 
 
         // Update button on its own line
-        JButton btnUpdate = new JButton("Update");
+        JButton btnUpdate = new JButton("Cập nhật");
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,10 +86,10 @@ public class UserEditDialog extends JDialog {
             }
         });
         panel.add(btnUpdate);
-        panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
+        panel.add(Box.createVerticalStrut(35)); 
 
         // Delete button on its own line
-        JButton btnDelete = new JButton("Delete");
+        JButton btnDelete = new JButton("Xóa");
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,7 +100,7 @@ public class UserEditDialog extends JDialog {
         panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
 
         // Cancel button on its own line
-        JButton btnCancel = new JButton("Cancel");
+        JButton btnCancel = new JButton("Hủy bỏ");
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -211,11 +208,10 @@ public class UserEditDialog extends JDialog {
     private void updateUserDetails() {
         String username = txtUsername.getText().trim();
         String email = txtEmail.getText().trim();
-        String firstName = txtFirstName.getText().trim();
 
         // Kiểm tra các trường thông tin bắt buộc
-        if (username.isEmpty() || email.isEmpty() || firstName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các thông tin bắt buộc (Username, Email, First Name)", "Missing Information", JOptionPane.WARNING_MESSAGE);
+        if (username.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các thông tin bắt buộc (Username, Email)", "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -223,7 +219,7 @@ public class UserEditDialog extends JDialog {
             userDto.setCode(txtCode.getText());
             userDto.setUsername(username);
             userDto.setEmail(email);
-            userDto.setFirstName(firstName);
+            userDto.setFirstName(txtFirstName.getText());
             userDto.setLastName(txtLastName.getText());
             userDto.setAddress(txtAddress.getText());
             userDto.setBirthDate(dateChooser.getDate());

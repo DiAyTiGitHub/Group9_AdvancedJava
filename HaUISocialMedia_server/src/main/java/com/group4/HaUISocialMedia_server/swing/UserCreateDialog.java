@@ -1,7 +1,6 @@
 package com.group4.HaUISocialMedia_server.swing;
 
 import com.group4.HaUISocialMedia_server.dto.UserDto;
-import com.group4.HaUISocialMedia_server.service.AuthService;
 import com.group4.HaUISocialMedia_server.service.UserService;
 import javax.swing.*;
 import java.awt.*;
@@ -27,62 +26,48 @@ public class UserCreateDialog extends JDialog {
     }
 
     private void initUI() {
-        setTitle("Add New User");
-        setLayout(new GridLayout(13, 2));
+        setTitle("Thêm người dùng");
+        setLayout(new BorderLayout());
 
-        add(new JLabel("Username:"));
-        usernameField = new JTextField();
-        add(usernameField);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBorder(BorderFactory.createTitledBorder("Thông tin người dùng"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
 
-        add(new JLabel("Password:"));
-        passwordField = new JPasswordField();
-        add(passwordField);
+        addLabelAndField(mainPanel, gbc, "Username:", usernameField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "Password:", passwordField = new JPasswordField());
+        addLabelAndField(mainPanel, gbc, "Code:", codeField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "First Name:", firstNameField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "Last Name:", lastNameField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "Email:", emailField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "Address:", addressField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "Birth Date (yyyy-MM-dd):", birthDateField = new JTextField());
+        addLabelAndField(mainPanel, gbc, "Phone:", phoneField = new JTextField());
 
-        add(new JLabel("Code:"));
-        codeField = new JTextField();
-        add(codeField);
-
-        add(new JLabel("First Name:"));
-        firstNameField = new JTextField();
-        add(firstNameField);
-
-        add(new JLabel("Last Name:"));
-        lastNameField = new JTextField();
-        add(lastNameField);
-
-        add(new JLabel("Email:"));
-        emailField = new JTextField();
-        add(emailField);
-
-        add(new JLabel("Address:"));
-        addressField = new JTextField();
-        add(addressField);
-
-        add(new JLabel("Birth Date (yyyy-MM-dd):"));
-        birthDateField = new JTextField();
-        add(birthDateField);
-
-        add(new JLabel("Phone:"));
-        phoneField = new JTextField();
-        add(phoneField);
-
-        add(new JLabel("Gender:"));
+        gbc.gridx = 0;
+        gbc.gridy++;
+        mainPanel.add(new JLabel("Gender:"), gbc);
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         maleRadio = new JRadioButton("Male");
         femaleRadio = new JRadioButton("Female");
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(maleRadio);
         genderGroup.add(femaleRadio);
-        add(maleRadio);
-        add(femaleRadio);
+        genderPanel.add(maleRadio);
+        genderPanel.add(femaleRadio);
+        gbc.gridx = 1;
+        mainPanel.add(genderPanel, gbc);
 
-        add(new JLabel("Role:"));
-        roleComboBox = new JComboBox<>(new String[]{"ADMIN", "USER"}); // Example roles
-        add(roleComboBox);
+        addLabelAndField(mainPanel, gbc, "Role:", roleComboBox = new JComboBox<>(new String[]{"ADMIN", "USER"}));
+        addLabelAndField(mainPanel, gbc, "Disabled:", disableCheckBox = new JCheckBox());
 
-        add(new JLabel("Disabled:"));
-        disableCheckBox = new JCheckBox();
-        add(disableCheckBox);
+        add(mainPanel, BorderLayout.CENTER);
 
+        JPanel buttonPanel = new JPanel();
         saveButton = new JButton("Save");
         saveButton.addActionListener(new ActionListener() {
             @Override
@@ -90,7 +75,7 @@ public class UserCreateDialog extends JDialog {
                 saveUser();
             }
         });
-        add(saveButton);
+        buttonPanel.add(saveButton);
 
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
@@ -99,10 +84,20 @@ public class UserCreateDialog extends JDialog {
                 dispose();
             }
         });
-        add(cancelButton);
+        buttonPanel.add(cancelButton);
 
-        setSize(400, 400);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        setSize(400, 600);
         setLocationRelativeTo(null);
+    }
+
+    private void addLabelAndField(JPanel panel, GridBagConstraints gbc, String labelText, JComponent field) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel(labelText), gbc);
+        gbc.gridx = 1;
+        panel.add(field, gbc);
     }
 
     private void saveUser() {
@@ -119,7 +114,7 @@ public class UserCreateDialog extends JDialog {
             userDto.setBirthDate(dateFormat.parse(birthDateField.getText()));
             userDto.setPhoneNumber(phoneField.getText());
             userDto.setGender(maleRadio.isSelected());
-            userDto.setRole((String) roleComboBox.getSelectedItem()); // Role field
+            userDto.setRole((String) roleComboBox.getSelectedItem()); 
             userDto.setDisable(disableCheckBox.isSelected());
 
             UserDto createdUser = userService.createUser(userDto);
@@ -136,16 +131,16 @@ public class UserCreateDialog extends JDialog {
                         createdUser.isGender() ? "Male" : "Female",
                         createdUser.getPhoneNumber(),
                         createdUser.getDisable() ? "Disabled" : "Active",
-                        createdUser.getRole() 
+                        createdUser.getRole()
                 };
                 tableModel.addRow(rowData);
-                JOptionPane.showMessageDialog(this, "User created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tạo người dùng thành công!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to create user.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lỗi khi tạo người dùng.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Invalid input: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi nhập: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
