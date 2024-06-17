@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,7 +38,7 @@ public class UserEditDialog extends JDialog {
         this.rowIndex = rowIndex;
 
         setTitle("Chỉnh sửa thông tin tài khoản");
-        setSize(700, 575); // Increase size to accommodate larger avatar
+        setSize(700, 575); 
         setLocationRelativeTo(null);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -58,9 +59,23 @@ public class UserEditDialog extends JDialog {
 
     private void initLeftPanel(JPanel panel) {
         JPanel avatarPanel = new JPanel(new BorderLayout());
-        lblAvatar = new JLabel("Avatar", SwingConstants.CENTER);  // Placeholder for avatar
-        lblAvatar.setPreferredSize(new Dimension(150, 150)); // Increase size for avatar
+        lblAvatar = new JLabel("Avatar", SwingConstants.CENTER);  
+        lblAvatar.setPreferredSize(new Dimension(150, 150)); 
         lblAvatar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        // Load avatar from URL
+        if (userDto.getAvatar()!= null && !userDto.getAvatar().isEmpty()) {
+            try {
+                ImageIcon avatarIcon = new ImageIcon(new URL(userDto.getAvatar()));
+                Image image = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(image));
+                lblAvatar.setText("");  
+            } catch (Exception e) {
+                e.printStackTrace();
+                lblAvatar.setText("Lỗi khi load ảnh");
+            }
+        }
+        
         avatarPanel.add(lblAvatar, BorderLayout.CENTER);
         panel.add(avatarPanel);
 
@@ -77,7 +92,6 @@ public class UserEditDialog extends JDialog {
 
         panel.add(Box.createVerticalStrut(35)); 
 
-        // Update button on its own line
         JButton btnUpdate = new JButton("Cập nhật");
         btnUpdate.addActionListener(new ActionListener() {
             @Override
@@ -88,7 +102,6 @@ public class UserEditDialog extends JDialog {
         panel.add(btnUpdate);
         panel.add(Box.createVerticalStrut(35)); 
 
-        // Delete button on its own line
         JButton btnDelete = new JButton("Xóa");
         btnDelete.addActionListener(new ActionListener() {
             @Override
@@ -97,9 +110,8 @@ public class UserEditDialog extends JDialog {
             }
         });
         panel.add(btnDelete);
-        panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
+        panel.add(Box.createVerticalStrut(35)); 
 
-        // Cancel button on its own line
         JButton btnCancel = new JButton("Hủy bỏ");
         btnCancel.addActionListener(new ActionListener() {
             @Override
@@ -108,12 +120,12 @@ public class UserEditDialog extends JDialog {
             }
         });
         panel.add(btnCancel);
-        panel.add(Box.createVerticalStrut(35)); // Fixed spacing between buttons
+        panel.add(Box.createVerticalStrut(35));
     }
 
     private void initRightPanel(JPanel panel) {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Default insets
+        gbc.insets = new Insets(10, 10, 10, 10); 
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // THÔNG TIN TÀI KHOẢN label
@@ -122,46 +134,25 @@ public class UserEditDialog extends JDialog {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.PAGE_START; // Align title to the top
-        gbc.insets = new Insets(10, 10, 20, 10); // Top margin of 10px, bottom margin of 20px
+        gbc.anchor = GridBagConstraints.PAGE_START; 
+        gbc.insets = new Insets(10, 10, 20, 10); 
         panel.add(titleLabel, gbc);
 
-        // Username
         addLabelAndTextField(panel, "Username:", txtUsername = new JTextField(userDto.getUsername()), gbc, 1);
-
-        // Email
         addLabelAndTextField(panel, "Email:", txtEmail = new JTextField(userDto.getEmail()), gbc, 2);
-
-        // First Name
         addLabelAndTextField(panel, "First Name:", txtFirstName = new JTextField(userDto.getFirstName()), gbc, 3);
-
-        // Last Name
         addLabelAndTextField(panel, "Last Name:", txtLastName = new JTextField(userDto.getLastName()), gbc, 4);
-
-        // Address
         addLabelAndTextField(panel, "Address:", txtAddress = new JTextField(userDto.getAddress()), gbc, 5);
-
-        // Birth Date (using JDateChooser)
         addLabelAndDateChooser(panel, "Birth Date:", dateChooser = new JDateChooser(), gbc, 6);
         if (userDto.getBirthDate() != null) {
             dateChooser.setDate(userDto.getBirthDate());
         }
-
-        // Gender (using JComboBox)
         addLabelAndComboBox(panel, "Gender:", cbGender = new JComboBox<>(new String[]{"Male", "Female"}), gbc, 7);
         cbGender.setSelectedItem(userDto.isGender() ? "Male" : "Female");
-
-        // Phone
         addLabelAndTextField(panel, "Phone:", txtPhone = new JTextField(userDto.getPhoneNumber()), gbc, 8);
-
-        // Status (using JComboBox)
         addLabelAndComboBox(panel, "Status:", cbStatus = new JComboBox<>(new String[]{"Active", "Disabled"}), gbc, 9);
         cbStatus.setSelectedItem(userDto.getDisable() ? "Disabled" : "Active");
-
-        // Reset insets for the last component
         gbc.insets = new Insets(10, 10, 10, 10); // Default insets
-
-        // Fill remaining space
         gbc.weighty = 1.0;
         panel.add(new JPanel(), gbc);
     }
@@ -208,8 +199,6 @@ public class UserEditDialog extends JDialog {
     private void updateUserDetails() {
         String username = txtUsername.getText().trim();
         String email = txtEmail.getText().trim();
-
-        // Kiểm tra các trường thông tin bắt buộc
         if (username.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các thông tin bắt buộc (Username, Email)", "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;

@@ -412,8 +412,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsersNotVoided() {
-        User currentUser = this.getCurrentLoginUserEntity();
-        if (currentUser == null) return null;
+//        User currentUser = this.getCurrentLoginUserEntity();
+//        if (currentUser == null) return null;
 
         List<UserDto> res = new ArrayList<>();
         List<User> allUsers = userRepository.findAll();
