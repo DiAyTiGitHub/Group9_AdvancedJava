@@ -5,12 +5,11 @@ import com.group4.HaUISocialMedia_server.service.UserService;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import javax.swing.table.DefaultTableModel;
 
 public class UserEditDialog extends JDialog {
 
@@ -38,61 +37,67 @@ public class UserEditDialog extends JDialog {
         this.rowIndex = rowIndex;
 
         setTitle("Chỉnh sửa thông tin tài khoản");
-        setSize(700, 575); 
+        setSize(700, 575);
         setLocationRelativeTo(null);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(0.3);
+        JPanel contentPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        // Panel bên trái (1/3 chiều rộng)
+        JPanel leftPanel = new JPanel(null); 
         initLeftPanel(leftPanel);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.3;
+        contentPanel.add(leftPanel, gbc);
 
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new GridBagLayout());
+        // Panel bên phải (2/3 chiều rộng)
+        JPanel rightPanel = new JPanel(null); 
         initRightPanel(rightPanel);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0.7;
+        contentPanel.add(rightPanel, gbc);
 
-        splitPane.setLeftComponent(leftPanel);
-        splitPane.setRightComponent(rightPanel);
-        add(splitPane);
+        add(contentPanel);
     }
 
     private void initLeftPanel(JPanel panel) {
-        JPanel avatarPanel = new JPanel(new BorderLayout());
-        lblAvatar = new JLabel("Avatar", SwingConstants.CENTER);  
-        lblAvatar.setPreferredSize(new Dimension(150, 150)); 
+        lblAvatar = new JLabel("Avatar", SwingConstants.CENTER);
+        lblAvatar.setBounds(30, 10, 150, 150);
         lblAvatar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-        // Load avatar from URL
         if (userDto.getAvatar()!= null && !userDto.getAvatar().isEmpty()) {
-            try {
-                ImageIcon avatarIcon = new ImageIcon(new URL(userDto.getAvatar()));
-                Image image = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-                lblAvatar.setIcon(new ImageIcon(image));
-                lblAvatar.setText("");  
-            } catch (Exception e) {
-                e.printStackTrace();
-                lblAvatar.setText("Lỗi khi load ảnh");
-            }
+        try {
+            ImageIcon avatarIcon = new ImageIcon(new URL(userDto.getAvatar()));
+            Image image = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            lblAvatar.setIcon(new ImageIcon(image));
+            lblAvatar.setText(""); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblAvatar.setText("Lỗi load ảnh");
         }
-        
-        avatarPanel.add(lblAvatar, BorderLayout.CENTER);
-        panel.add(avatarPanel);
+    }
+        panel.add(lblAvatar);
 
-        JPanel codePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        codePanel.add(new JLabel("Code:"));
-        txtCode = new JTextField(userDto.getCode(), 15); 
-        txtCode.setPreferredSize(new Dimension(150, 35)); 
+        JPanel codePanel = new JPanel();
+        codePanel.setBounds(10, 170, 200, 35);
+        codePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JLabel codeLabel = new JLabel("Code:");
+        txtCode = new JTextField(userDto.getCode(), 10);
+        txtCode.setPreferredSize(new Dimension(150, 30));
+        codePanel.add(codeLabel);
         codePanel.add(txtCode);
         panel.add(codePanel);
 
-        JSeparator separator = new JSeparator();
-        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-        panel.add(separator);
-
-        panel.add(Box.createVerticalStrut(35)); 
-
         JButton btnUpdate = new JButton("Cập nhật");
+        btnUpdate.setBounds(10, 250, 190, 35);
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,9 +105,9 @@ public class UserEditDialog extends JDialog {
             }
         });
         panel.add(btnUpdate);
-        panel.add(Box.createVerticalStrut(35)); 
 
         JButton btnDelete = new JButton("Xóa");
+        btnDelete.setBounds(10, 350, 190, 35);
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,9 +115,9 @@ public class UserEditDialog extends JDialog {
             }
         });
         panel.add(btnDelete);
-        panel.add(Box.createVerticalStrut(35)); 
 
         JButton btnCancel = new JButton("Hủy bỏ");
+        btnCancel.setBounds(10, 450, 190, 35);
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,85 +125,97 @@ public class UserEditDialog extends JDialog {
             }
         });
         panel.add(btnCancel);
-        panel.add(Box.createVerticalStrut(35));
     }
 
     private void initRightPanel(JPanel panel) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); 
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // THÔNG TIN TÀI KHOẢN label
         JLabel titleLabel = new JLabel("THÔNG TIN TÀI KHOẢN", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 18));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.PAGE_START; 
-        gbc.insets = new Insets(10, 10, 20, 10); 
-        panel.add(titleLabel, gbc);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        titleLabel.setBounds(30, 10, 300, 30);
+        panel.add(titleLabel);
 
-        addLabelAndTextField(panel, "Username:", txtUsername = new JTextField(userDto.getUsername()), gbc, 1);
-        addLabelAndTextField(panel, "Email:", txtEmail = new JTextField(userDto.getEmail()), gbc, 2);
-        addLabelAndTextField(panel, "First Name:", txtFirstName = new JTextField(userDto.getFirstName()), gbc, 3);
-        addLabelAndTextField(panel, "Last Name:", txtLastName = new JTextField(userDto.getLastName()), gbc, 4);
-        addLabelAndTextField(panel, "Address:", txtAddress = new JTextField(userDto.getAddress()), gbc, 5);
-        addLabelAndDateChooser(panel, "Birth Date:", dateChooser = new JDateChooser(), gbc, 6);
+        int y = 50; // Vị trí y bắt đầu của các component
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(30, y, 100, 30);
+        panel.add(usernameLabel);
+        txtUsername = new JTextField(userDto.getUsername());
+        txtUsername.setBounds(150, y, 250, 30);
+        panel.add(txtUsername);
+        y += 50;
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setBounds(30, y, 100, 30);
+        panel.add(emailLabel);
+        txtEmail = new JTextField(userDto.getEmail());
+        txtEmail.setBounds(150, y, 250, 30);
+        panel.add(txtEmail);
+        y += 50;
+
+        JLabel firstNameLabel = new JLabel("First Name:");
+        firstNameLabel.setBounds(30, y, 100, 30);
+        panel.add(firstNameLabel);
+        txtFirstName = new JTextField(userDto.getFirstName());
+        txtFirstName.setBounds(150, y, 250, 30);
+        panel.add(txtFirstName);
+        y += 50;
+
+        JLabel lastNameLabel = new JLabel("Last Name:");
+        lastNameLabel.setBounds(30, y, 100, 30);
+        panel.add(lastNameLabel);
+        txtLastName = new JTextField(userDto.getLastName());
+        txtLastName.setBounds(150, y, 250, 30);
+        panel.add(txtLastName);
+        y += 50;
+
+        JLabel addressLabel = new JLabel("Address:");
+        addressLabel.setBounds(30, y, 100, 30);
+        panel.add(addressLabel);
+        txtAddress = new JTextField(userDto.getAddress());
+        txtAddress.setBounds(150, y, 250, 30);
+        panel.add(txtAddress);
+        y += 50;
+
+        JLabel birthDateLabel = new JLabel("Birth Date:");
+        birthDateLabel.setBounds(30, y, 100, 30);
+        panel.add(birthDateLabel);
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(150, y, 250, 30);
         if (userDto.getBirthDate() != null) {
             dateChooser.setDate(userDto.getBirthDate());
         }
-        addLabelAndComboBox(panel, "Gender:", cbGender = new JComboBox<>(new String[]{"Male", "Female"}), gbc, 7);
+        panel.add(dateChooser);
+        y += 50;
+
+        JLabel genderLabel = new JLabel("Gender:");
+        genderLabel.setBounds(30, y, 100, 30);
+        panel.add(genderLabel);
+        cbGender = new JComboBox<>(new String[]{"Male", "Female"});
+        cbGender.setBounds(150, y, 250, 30);
         cbGender.setSelectedItem(userDto.isGender() ? "Male" : "Female");
-        addLabelAndTextField(panel, "Phone:", txtPhone = new JTextField(userDto.getPhoneNumber()), gbc, 8);
-        addLabelAndComboBox(panel, "Status:", cbStatus = new JComboBox<>(new String[]{"Active", "Disabled"}), gbc, 9);
+        panel.add(cbGender);
+        y += 50;
+
+        JLabel phoneLabel = new JLabel("Phone:");
+        phoneLabel.setBounds(30, y, 100, 30);
+        panel.add(phoneLabel);
+        txtPhone = new JTextField(userDto.getPhoneNumber());
+        txtPhone.setBounds(150, y, 250, 30);
+        panel.add(txtPhone);
+        y += 50;
+
+        JLabel statusLabel = new JLabel("Status:");
+        statusLabel.setBounds(30, y, 100, 30);
+        panel.add(statusLabel);
+        cbStatus = new JComboBox<>(new String[]{"Active", "Disabled"});
+        cbStatus.setBounds(150, y, 250, 30);
         cbStatus.setSelectedItem(userDto.getDisable() ? "Disabled" : "Active");
-        gbc.insets = new Insets(10, 10, 10, 10); // Default insets
-        gbc.weighty = 1.0;
-        panel.add(new JPanel(), gbc);
-    }
-
-    private void addLabelAndTextField(JPanel panel, String labelText, JTextField textField, GridBagConstraints gbc, int row) {
-        JLabel label = new JLabel(labelText);
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        panel.add(label, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(textField, gbc);
-    }
-
-    private void addLabelAndDateChooser(JPanel panel, String labelText, JDateChooser dateChooser, GridBagConstraints gbc, int row) {
-        JLabel label = new JLabel(labelText);
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        panel.add(label, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(dateChooser, gbc);
-    }
-
-    private void addLabelAndComboBox(JPanel panel, String labelText, JComboBox<String> comboBox, GridBagConstraints gbc, int row) {
-        JLabel label = new JLabel(labelText);
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        panel.add(label, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(comboBox, gbc);
+        panel.add(cbStatus);
     }
 
     private void updateUserDetails() {
         String username = txtUsername.getText().trim();
         String email = txtEmail.getText().trim();
+
         if (username.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các thông tin bắt buộc (Username, Email)", "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;
@@ -257,4 +274,13 @@ public class UserEditDialog extends JDialog {
             }
         }
     }
+
+//    public static void main(String[] args) {
+//        // Sample usage to test the dialog
+//        UserService userService = new UserService();
+//        UserDto userDto = new UserDto();
+//        DefaultTableModel tableModel = new DefaultTableModel();
+//        UserEditDialog dialog = new UserEditDialog(userService, userDto, tableModel, 0);
+//        dialog.setVisible(true);
+//    }
 }
