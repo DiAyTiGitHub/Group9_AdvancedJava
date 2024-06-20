@@ -74,16 +74,16 @@ public class UserEditDialog extends JDialog {
         lblAvatar.setBounds(30, 10, 150, 150);
         lblAvatar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         if (userDto.getAvatar()!= null && !userDto.getAvatar().isEmpty()) {
-        try {
-            ImageIcon avatarIcon = new ImageIcon(new URL(userDto.getAvatar()));
-            Image image = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-            lblAvatar.setIcon(new ImageIcon(image));
-            lblAvatar.setText(""); 
-        } catch (Exception e) {
-            e.printStackTrace();
-            lblAvatar.setText("Lỗi load ảnh");
+            try {
+                ImageIcon avatarIcon = new ImageIcon(new URL(userDto.getAvatar()));
+                Image image = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(image));
+                lblAvatar.setText(""); 
+            } catch (Exception e) {
+                e.printStackTrace();
+                lblAvatar.setText("Lỗi load ảnh");
+            }
         }
-    }
         panel.add(lblAvatar);
 
         JPanel codePanel = new JPanel();
