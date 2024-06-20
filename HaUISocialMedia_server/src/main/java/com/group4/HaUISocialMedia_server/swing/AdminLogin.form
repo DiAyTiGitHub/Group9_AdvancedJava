@@ -196,11 +196,6 @@
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="logo">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="D:\chatRom2\Group9_AdvancedJava\HaUISocialMedia_server\src\main\resources\logo-haui-size.png"/>
-            </Property>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
         </Component>

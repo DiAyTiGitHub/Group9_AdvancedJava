@@ -65,6 +65,15 @@ public class AdminLogin extends javax.swing.JFrame {
             };
             tableModel.addRow(rowData);
         }
+        try {
+                ImageIcon avatarIcon = new ImageIcon(new URL("https://firebasestorage.googleapis.com/v0/b/minishop-29721.appspot.com/o/files%2F80c546ef-94b7-4946-99b0-b8e0847ce686?alt=media&token=db60cdd2-995f-47ea-88bc-aaf216219997"));
+                Image image = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                logo.setIcon(new ImageIcon(image));
+                logo.setText(""); 
+            } catch (Exception e) {
+                e.printStackTrace();
+                logo.setText("Lỗi load ảnh");
+            }
     }
 
     public AdminLogin() {
@@ -188,8 +197,6 @@ public class AdminLogin extends javax.swing.JFrame {
                 ListBtnActionPerformed(evt);
             }
         });
-
-        logo.setIcon(new javax.swing.ImageIcon("D:\\chatRom2\\Group9_AdvancedJava\\HaUISocialMedia_server\\src\\main\\resources\\logo-haui-size.png")); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
