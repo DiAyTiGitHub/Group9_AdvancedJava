@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserEditDialog extends JDialog {
 
@@ -37,7 +39,7 @@ public class UserEditDialog extends JDialog {
         this.rowIndex = rowIndex;
 
         setTitle("Chỉnh sửa thông tin tài khoản");
-        setSize(700, 575);
+        setSize(700, 550);
         setLocationRelativeTo(null);
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -67,6 +69,12 @@ public class UserEditDialog extends JDialog {
         contentPanel.add(rightPanel, gbc);
 
         add(contentPanel);
+        
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(UserCreateDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void initLeftPanel(JPanel panel) {
@@ -87,17 +95,19 @@ public class UserEditDialog extends JDialog {
         panel.add(lblAvatar);
 
         JPanel codePanel = new JPanel();
-        codePanel.setBounds(10, 170, 200, 35);
+        codePanel.setBounds(25, 170, 225, 35);
         codePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel codeLabel = new JLabel("Code:");
         txtCode = new JTextField(userDto.getCode(), 10);
         txtCode.setPreferredSize(new Dimension(150, 30));
+        txtCode.setEnabled(false);
         codePanel.add(codeLabel);
         codePanel.add(txtCode);
         panel.add(codePanel);
 
         JButton btnUpdate = new JButton("Cập nhật");
         btnUpdate.setBounds(10, 250, 190, 35);
+        btnUpdate.setBackground(new Color(204,255,255));
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -107,7 +117,8 @@ public class UserEditDialog extends JDialog {
         panel.add(btnUpdate);
 
         JButton btnDelete = new JButton("Xóa");
-        btnDelete.setBounds(10, 350, 190, 35);
+        btnDelete.setBounds(10, 300, 190, 35);
+        btnDelete.setBackground(new Color(204,255,255));
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -118,6 +129,7 @@ public class UserEditDialog extends JDialog {
 
         JButton btnCancel = new JButton("Hủy bỏ");
         btnCancel.setBounds(10, 450, 190, 35);
+        btnCancel.setBackground(new Color(204,255,255));
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -129,57 +141,57 @@ public class UserEditDialog extends JDialog {
 
     private void initRightPanel(JPanel panel) {
         JLabel titleLabel = new JLabel("THÔNG TIN TÀI KHOẢN", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        titleLabel.setBounds(30, 10, 300, 30);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setBounds(50, 10, 300, 30);
         panel.add(titleLabel);
 
         int y = 50; // Vị trí y bắt đầu của các component
 
         JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setBounds(30, y, 100, 30);
+        usernameLabel.setBounds(40, y, 100, 30);
         panel.add(usernameLabel);
         txtUsername = new JTextField(userDto.getUsername());
-        txtUsername.setBounds(150, y, 250, 30);
+        txtUsername.setBounds(150, y, 275, 30);
         panel.add(txtUsername);
         y += 50;
 
         JLabel emailLabel = new JLabel("Email:");
-        emailLabel.setBounds(30, y, 100, 30);
+        emailLabel.setBounds(40, y, 100, 30);
         panel.add(emailLabel);
         txtEmail = new JTextField(userDto.getEmail());
-        txtEmail.setBounds(150, y, 250, 30);
+        txtEmail.setBounds(150, y, 275, 30);
         panel.add(txtEmail);
         y += 50;
 
         JLabel firstNameLabel = new JLabel("First Name:");
-        firstNameLabel.setBounds(30, y, 100, 30);
+        firstNameLabel.setBounds(40, y, 100, 30);
         panel.add(firstNameLabel);
         txtFirstName = new JTextField(userDto.getFirstName());
-        txtFirstName.setBounds(150, y, 250, 30);
+        txtFirstName.setBounds(150, y, 275, 30);
         panel.add(txtFirstName);
         y += 50;
 
         JLabel lastNameLabel = new JLabel("Last Name:");
-        lastNameLabel.setBounds(30, y, 100, 30);
+        lastNameLabel.setBounds(40, y, 100, 30);
         panel.add(lastNameLabel);
         txtLastName = new JTextField(userDto.getLastName());
-        txtLastName.setBounds(150, y, 250, 30);
+        txtLastName.setBounds(150, y, 275, 30);
         panel.add(txtLastName);
         y += 50;
 
         JLabel addressLabel = new JLabel("Address:");
-        addressLabel.setBounds(30, y, 100, 30);
+        addressLabel.setBounds(40, y, 100, 30);
         panel.add(addressLabel);
         txtAddress = new JTextField(userDto.getAddress());
-        txtAddress.setBounds(150, y, 250, 30);
+        txtAddress.setBounds(150, y, 275, 30);
         panel.add(txtAddress);
         y += 50;
 
         JLabel birthDateLabel = new JLabel("Birth Date:");
-        birthDateLabel.setBounds(30, y, 100, 30);
+        birthDateLabel.setBounds(40, y, 100, 30);
         panel.add(birthDateLabel);
         dateChooser = new JDateChooser();
-        dateChooser.setBounds(150, y, 250, 30);
+        dateChooser.setBounds(150, y, 275, 30);
         if (userDto.getBirthDate() != null) {
             dateChooser.setDate(userDto.getBirthDate());
         }
@@ -187,27 +199,27 @@ public class UserEditDialog extends JDialog {
         y += 50;
 
         JLabel genderLabel = new JLabel("Gender:");
-        genderLabel.setBounds(30, y, 100, 30);
+        genderLabel.setBounds(40, y, 100, 30);
         panel.add(genderLabel);
         cbGender = new JComboBox<>(new String[]{"Male", "Female"});
-        cbGender.setBounds(150, y, 250, 30);
+        cbGender.setBounds(150, y, 275, 30);
         cbGender.setSelectedItem(userDto.isGender() ? "Male" : "Female");
         panel.add(cbGender);
         y += 50;
 
         JLabel phoneLabel = new JLabel("Phone:");
-        phoneLabel.setBounds(30, y, 100, 30);
+        phoneLabel.setBounds(40, y, 100, 30);
         panel.add(phoneLabel);
         txtPhone = new JTextField(userDto.getPhoneNumber());
-        txtPhone.setBounds(150, y, 250, 30);
+        txtPhone.setBounds(150, y, 275, 30);
         panel.add(txtPhone);
         y += 50;
 
         JLabel statusLabel = new JLabel("Status:");
-        statusLabel.setBounds(30, y, 100, 30);
+        statusLabel.setBounds(40, y, 100, 30);
         panel.add(statusLabel);
         cbStatus = new JComboBox<>(new String[]{"Active", "Disabled"});
-        cbStatus.setBounds(150, y, 250, 30);
+        cbStatus.setBounds(150, y, 275, 30);
         cbStatus.setSelectedItem(userDto.getDisable() ? "Disabled" : "Active");
         panel.add(cbStatus);
     }

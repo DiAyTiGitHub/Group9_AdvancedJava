@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 public class UserCreateDialog extends JDialog {
@@ -34,6 +36,11 @@ public class UserCreateDialog extends JDialog {
         this.userService = userService;
         this.tableModel = tableModel;
         initUI();
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(UserCreateDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void initUI() {
@@ -44,8 +51,8 @@ public class UserCreateDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
         JLabel lblTitle = new JLabel("Thêm thông tin người dùng");
-        lblTitle.setFont(new Font("Arial", Font.PLAIN, 20));
-        lblTitle.setBounds(275, 30, 300, 50);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setBounds(250, 30, 350, 50);
         add(lblTitle);
         
         JLabel lblCode = new JLabel("Code:");
@@ -150,8 +157,9 @@ public class UserCreateDialog extends JDialog {
         cbRole.setBounds(500, 350, 200, 30);
         add(cbRole);
 
-        JButton btnSave = new JButton("Save");
+        JButton btnSave = new JButton("Tạo mới");
         btnSave.setBounds(275, 450, 100, 30);
+        btnSave.setBackground(new Color(204,255,255));
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -160,8 +168,9 @@ public class UserCreateDialog extends JDialog {
         });
         add(btnSave);
 
-        JButton btnCancel = new JButton("Cancel");
+        JButton btnCancel = new JButton("Hủy bỏ");
         btnCancel.setBounds(425, 450, 100, 30);
+        btnCancel.setBackground(new Color(204,255,255));
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
